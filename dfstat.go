@@ -22,7 +22,6 @@ var FSTYPE_IGNORE = map[string]struct{}{
 	"rpc_pipefs": struct{}{},
 	"rootfs":     struct{}{},
 	"overlay":    struct{}{},
-	"tmpfs":      struct{}{},
 	"squashfs":   struct{}{},
         "autofs":     struct{}{},
         "ceph":       struct{}{},
