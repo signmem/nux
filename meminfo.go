@@ -21,10 +21,15 @@ type Mem struct {
 	SwapTotal    uint64
 	SwapUsed     uint64
 	SwapFree     uint64
+	Slab         uint64
+	Reclaimable  uint64
+	Unreclaim    uint64
+        Spercent     uint64
 }
 
 func (this *Mem) String() string {
-	return fmt.Sprintf("<MemTotal:%d, MemFree:%d, MemAvailable:%d, Buffers:%d, Cached:%d...>", this.MemTotal, this.MemFree, this.MemAvailable, this.Buffers, this.Cached)
+	return fmt.Sprintf("<MemTotal:%d, MemFree:%d, MemAvailable:%d, Buffers:%d, Cached:%d, Slab:%d...>", 
+		this.MemTotal, this.MemFree, this.MemAvailable, this.Buffers, this.Cached, this.Slab)
 }
 
 var Multi uint64 = 1024
@@ -37,6 +42,9 @@ var WANT = map[string]struct{}{
 	"MemAvailable:": struct{}{},
 	"SwapTotal:":    struct{}{},
 	"SwapFree:":     struct{}{},
+	"Slab:":	 struct{}{},
+	"SReclaimable:": struct{}{},
+	"SUnreclaim:":   struct{}{},
 }
 
 func MemInfo() (*Mem, error) {
@@ -82,11 +90,17 @@ func MemInfo() (*Mem, error) {
 				memInfo.SwapTotal = val * Multi
 			case "SwapFree:":
 				memInfo.SwapFree = val * Multi
+			case "Slab:":
+				memInfo.Slab = val * Multi
+			case "SReclaimable:":
+				memInfo.Reclaimable = val * Multi
+			case "SUnreclaim:":
+				memInfo.Unreclaim = val * Multi
 			}
 		}
 	}
 
 	memInfo.SwapUsed = memInfo.SwapTotal - memInfo.SwapFree
-
+	memInfo.Spercent = ( memInfo.Slab / memInfo.MemTotal ) * 100
 	return memInfo, nil
 }
