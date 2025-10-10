@@ -24,7 +24,6 @@ type Mem struct {
 	Slab         uint64
 	Reclaimable  uint64
 	Unreclaim    uint64
-        Spercent     uint64
 }
 
 func (this *Mem) String() string {
@@ -101,6 +100,5 @@ func MemInfo() (*Mem, error) {
 	}
 
 	memInfo.SwapUsed = memInfo.SwapTotal - memInfo.SwapFree
-	memInfo.Spercent = ( memInfo.Slab / memInfo.MemTotal ) * 100
 	return memInfo, nil
 }
