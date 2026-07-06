@@ -50,15 +50,15 @@ func ListDiskStats() ([]*DiskStats, error) {
 		return nil, err
 	}
 
-	ret := make([]*DiskStats, 0)
+	ret := make([]*DiskStats, 0, 64)
 
 	reader := bufio.NewReader(bytes.NewBuffer(contents))
 	for {
-		line, err := file.ReadLine(reader)
+		line, err := file.ReadLineBytes(reader)
 		if err == io.EOF {
-			err = nil
 			break
-		} else if err != nil {
+		}
+		if err != nil {
 			return nil, err
 		}
 
@@ -80,62 +80,76 @@ func ListDiskStats() ([]*DiskStats, error) {
 
 		item := &DiskStats{}
 		if item.Major, err = strconv.Atoi(fields[0]); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.Minor, err = strconv.Atoi(fields[1]); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		item.Device = fields[2]
 
 		if item.ReadRequests, err = strconv.ParseUint(fields[3], 10, 64); err != nil {
-			return nil, err
+			// reurn nil, err
+			continue
 		}
 
 		if item.ReadMerged, err = strconv.ParseUint(fields[4], 10, 64); err != nil {
-			return nil, err
+			// reurn nil, err
+			continue
 		}
 
 		if item.ReadSectors, err = strconv.ParseUint(fields[5], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.MsecRead, err = strconv.ParseUint(fields[6], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.WriteRequests, err = strconv.ParseUint(fields[7], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.WriteMerged, err = strconv.ParseUint(fields[8], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.WriteSectors, err = strconv.ParseUint(fields[9], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.MsecWrite, err = strconv.ParseUint(fields[10], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.IosInProgress, err = strconv.ParseUint(fields[11], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.MsecTotal, err = strconv.ParseUint(fields[12], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if item.MsecWeightedTotal, err = strconv.ParseUint(fields[13], 10, 64); err != nil {
-			return nil, err
+			// return nil, err
+			continue
 		}
 
 		if size > 14 {
 			if item.DiscardRequests, err = strconv.ParseUint(fields[14], 10, 64); err != nil {
-				return nil, err
+				// return nil, err
+				continue
 			}
 		}
 
